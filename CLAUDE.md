@@ -56,6 +56,13 @@ pytest tests/test_name.py::test_function
 python -c "from database.db import init_db; init_db()"
 ```
 
+## Git Workflow
+
+**Committing changes:**
+- Use `/git-command` for safely committing folder renames. This command confirms before running, checks for duplicate commit messages, and never pushes automatically.
+- For other commits, use standard git commands: `git add`, `git commit`, etc.
+- The `/git-command` skill is scoped to add + commit only; push to remote manually when ready.
+
 ## Project Structure
 
 ```
@@ -86,7 +93,7 @@ All routes are currently defined in `app.py` using decorators. There are three c
 2. **Placeholder routes** (logout, profile, add_expense, edit_expense, delete_expense) - return placeholder strings to be replaced with full implementations
 
 **Database Layer:**
-The `database/db.py` module is a stub that should implement:
+The `database/db.py` module is a **stub with no implementation**. Students implement these functions during Step 1:
 - `get_db()` - Opens SQLite connection with `row_factory` and foreign key constraints enabled
 - `init_db()` - Creates all tables using `CREATE TABLE IF NOT EXISTS`
 - `seed_db()` - Inserts sample data for development and testing
@@ -109,7 +116,7 @@ When implementing database features, import and use `get_db()` from `database.db
 
 ## Testing
 
-The project uses pytest with pytest-flask for testing. Tests should:
+The project uses pytest with pytest-flask for testing. A `tests/` directory will be created as part of the implementation steps. When tests are added, they should:
 - Test individual routes with the Flask test client
 - Verify response status codes and returned content
 - Mock or use a test database (typically done via fixtures in pytest)
@@ -121,9 +128,21 @@ def test_landing_route(client):
     assert response.status_code == 200
 ```
 
+**Run tests:**
+```bash
+pytest                                           # Run all tests
+pytest tests/test_name.py::test_function        # Run a specific test
+```
+
 ## Important Notes
 
 - The project is designed for incremental development; placeholder routes exist for future implementation
 - Database initialization must be done before running the app if database features are implemented
 - The `.DS_Store` and `__pycache__/` files are ignored but may appear in version control
 - Debug mode is enabled in development for auto-reload; disable in production
+
+## Troubleshooting
+
+- **Database file (instance.db) is created at runtime** and is in `.gitignore` — it won't be tracked in version control
+- **Routes return placeholder strings** if they show "coming in Step X", the corresponding database/feature functions haven't been implemented yet
+- **Port 5001 is in use?** Change the port in the `if __name__ == "__main__"` block in `app.py`

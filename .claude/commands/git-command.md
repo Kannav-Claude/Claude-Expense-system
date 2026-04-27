@@ -1,22 +1,19 @@
 ---
 allowed-tools: Bash(git status:*), Bash(git log:*), Bash(git add:*), Bash(git commit:*)
-description: Safely stage and commit a folder rename — confirms before running, checks for duplicate commit messages, never pushes.
+description: Safely stage and commit changes with confirmation, duplicate message checking, and no push.
 ---
 
-# Git Rename Commit
+# Git Commit
 
-You are helping the user stage and commit a folder rename. Follow these steps **exactly and in order**. Never run `git push` under any circumstances.
+You are helping the user stage and commit changes. Follow these steps **exactly and in order**. Never run `git push` under any circumstances.
 
 ## Step 1 — Gather the commit message
 
-Ask the user: **"What folder was renamed, and what is the new name?"**
+Ask the user: **"What commit message would you like to use?"**
 
-Use their answer to construct a commit message in this format:
-```
-rename: <old-folder-name> → <new-folder-name>
-```
+Use their answer to construct the commit message exactly as provided.
 
-If the user passed arguments via `$ARGUMENTS`, use that as the description directly instead of asking.
+If the user passed arguments via `$ARGUMENTS`, use that as the commit message directly instead of asking.
 
 ---
 
@@ -25,7 +22,7 @@ If the user passed arguments via `$ARGUMENTS`, use that as the description direc
 Run the following to check recent commit history:
 
 ```
-!`git log --oneline -20`
+git log --oneline -20
 ```
 
 If a commit message **identical** to the one you are about to use already exists in the log, **stop and ask the user**:
@@ -42,7 +39,7 @@ Show the user exactly what you are about to run:
 
 ```
 git add .
-git commit -m "<your constructed message>"
+git commit -m "<your commit message>"
 ```
 
 Then ask: **"Shall I proceed with these two commands? (yes / no)"**
