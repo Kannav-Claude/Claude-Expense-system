@@ -1,0 +1,15 @@
+ID,User ID,Amount,Category,Date,Description,Created At
+1,1,500,Food,2026-04-20,Weekly groceries,2026-04-28 15:07:08
+2,1,150,Transport,2026-04-22,Uber ride to office,2026-04-28 15:07:08
+3,1,2000,Bills,2026-04-01,Electricity bill,2026-04-28 15:07:08
+4,1,800,Health,2026-04-15,Doctor visit,2026-04-28 15:07:08
+5,1,300,Entertainment,2026-04-25,Movie tickets,2026-04-28 15:07:08
+6,1,1200,Shopping,2026-04-18,New t-shirts,2026-04-28 15:07:08
+7,1,100,Others,2026-04-26,Miscellaneous,2026-04-28 15:07:08
+8,2,600,Food,2026-04-21,Lunch meeting,2026-04-28 15:07:08
+9,2,200,Transport,2026-04-23,Cab ride,2026-04-28 15:07:08
+10,2,1500,Bills,2026-04-05,Internet bill,2026-04-28 15:07:08
+11,2,400,Health,2026-04-10,Pharmacy,2026-04-28 15:07:08
+12,2,500,Entertainment,2026-04-24,Concert tickets,2026-04-28 15:07:08
+13,2,2500,Shopping,2026-04-19,Formal dress,2026-04-28 15:07:08
+14,2,50,Others,2026-04-27,Parking,2026-04-28 15:07:08
