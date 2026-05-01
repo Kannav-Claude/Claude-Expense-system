@@ -33,6 +33,10 @@ def register():
             flash("All fields are required.", "error")
             return render_template("register.html")
 
+        if len(password) < 8:
+            flash("Password must be at least 8 characters long.", "error")
+            return render_template("register.html")
+
         db = get_db()
         try:
             db.execute(
