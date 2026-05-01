@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses - Spendly{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <div>
+            <h1>Your Expenses</h1>
+            <p class="subtitle">Track and manage your spending</p>
+        </div>
+        <a href="{{ url_for('add_expense') }}" class="btn btn-primary">+ Add Expense</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if expenses %}
+        <div class="expenses-grid">
+            {% for expense in expenses %}
+                <div class="expense-card">
+                    <div class="expense-header">
+                        <h3>{{ expense['category'] }}</h3>
+                        <span class="expense-amount">₹{{ "%.2f"|format(expense['amount']) }}</span>
+                    </div>
+
+                    <p class="expense-date">{{ expense['date'] }}</p>
+
+                    {% if expense['description'] %}
+                        <p class="expense-description">{{ expense['description'] }}</p>
+                    {% endif %}
+
+                    <div class="expense-actions">
+                        <a href="{{ url_for('edit_expense', id=expense['id']) }}" class="btn btn-sm btn-secondary">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_expense', id=expense['id']) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No expenses yet. <a href="{{ url_for('add_expense') }}">Add your first expense</a></p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+        color: var(--ink-muted);
+        font-size: 0.95rem;
+    }
+
+    .expenses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .expense-card {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .expense-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 2px 8px rgba(26, 71, 42, 0.1);
+    }
+
+    .expense-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .expense-header h3 {
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        color: var(--accent);
+    }
+
+    .expense-amount {
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: var(--ink);
+    }
+
+    .expense-date {
+        font-size: 0.85rem;
+        color: var(--ink-muted);
+        margin-bottom: 0.75rem;
+    }
+
+    .expense-description {
+        font-size: 0.9rem;
+        color: var(--ink-soft);
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .expense-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-soft);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--ink-muted);
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+    }
+
+    .empty-state a {
+        color: var(--accent);
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
