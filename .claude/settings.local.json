@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(curl -s http://localhost:5001/register)",
-      "Bash(curl -s -X POST http://localhost:5001/register -d 'name=&email=&password=')"
+      "Bash(curl -s -X POST http://localhost:5001/register -d 'name=&email=&password=')",
+      "Bash(python *)"
     ]
   }
 }

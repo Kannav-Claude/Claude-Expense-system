@@ -56,12 +56,6 @@ pytest tests/test_name.py::test_function
 python -c "from database.db import init_db; init_db()"
 ```
 
-## Git Workflow
-
-**Committing changes:**
-- Use `/git-command` for safely committing folder renames. This command confirms before running, checks for duplicate commit messages, and never pushes automatically.
-- For other commits, use standard git commands: `git add`, `git commit`, etc.
-- The `/git-command` skill is scoped to add + commit only; push to remote manually when ready.
 
 ## Project Structure
 
