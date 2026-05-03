@@ -100,6 +100,14 @@ def logout():
     return redirect(url_for("landing"))
 
 
+@app.route("/analytics")
+def analytics():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    return render_template("analytics.html")
+
+
 @app.route("/expenses")
 def expenses():
     if "user_id" not in session:

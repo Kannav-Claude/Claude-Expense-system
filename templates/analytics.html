@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Spendly{% endblock %}
+
+{% block head %}
+<style>
+    .analytics-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .analytics-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .analytics-icon-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        background: var(--accent-light);
+        border-radius: 50%;
+        margin-bottom: 1.5rem;
+    }
+
+    .analytics-icon-badge svg {
+        width: 40px;
+        height: 40px;
+        color: var(--accent);
+    }
+
+    .analytics-title {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--ink);
+        margin-bottom: 1.5rem;
+    }
+
+    .analytics-badge {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--paper);
+        padding: 0.4rem 1rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .analytics-description {
+        font-size: 1rem;
+        color: var(--ink-muted);
+        line-height: 1.7;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .analytics-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin: 4rem 0;
+    }
+
+    .feature-card {
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 2rem;
+        transition: all 0.2s;
+    }
+
+    .feature-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 4px 16px rgba(15, 15, 15, 0.08);
+    }
+
+    .feature-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        margin-bottom: 1rem;
+    }
+
+    .feature-icon-wrapper.blue {
+        background: #e3f2fd;
+    }
+
+    .feature-icon-wrapper.green {
+        background: #e8f5e9;
+    }
+
+    .feature-icon-wrapper.orange {
+        background: #fff3e0;
+    }
+
+    .feature-icon-wrapper svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .feature-icon-wrapper.blue svg { color: #1976d2; }
+    .feature-icon-wrapper.green svg { color: #388e3c; }
+    .feature-icon-wrapper.orange svg { color: #f57c00; }
+
+    .feature-title {
+        font-family: var(--font-body);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--ink);
+        margin-bottom: 0.75rem;
+    }
+
+    .feature-description {
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+        line-height: 1.6;
+    }
+
+    .analytics-cta {
+        text-align: center;
+        margin-top: 4rem;
+        padding: 3rem 2rem;
+        background: var(--paper-warm);
+        border-radius: var(--radius-md);
+    }
+
+    .analytics-cta-text {
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .analytics-cta-button {
+        display: inline-block;
+        background: var(--accent);
+        color: var(--paper);
+        padding: 0.7rem 2rem;
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s;
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+    }
+
+    .analytics-cta-button:hover {
+        background: var(--ink);
+    }
+
+    @media (max-width: 768px) {
+        .analytics-container {
+            padding: 2rem 1rem;
+        }
+
+        .analytics-features {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .analytics-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-container">
+    <div class="analytics-header">
+        <div class="analytics-icon-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+        </div>
+        <h1 class="analytics-title">Analytics</h1>
+        <div class="analytics-badge">Coming Soon</div>
+        <p class="analytics-description">
+            We're building powerful analytics tools to help you track and investigate your expenses better.
+            Get ready for detailed insights, spending patterns, and smart recommendations.
+        </p>
+    </div>
+
+    <div class="analytics-features">
+        <div class="feature-card">
+            <div class="feature-icon-wrapper blue">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+            </div>
+            <h3 class="feature-title">Spending Trends</h3>
+            <p class="feature-description">
+                Visualize your spending patterns over time and identify trends
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper green">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                </svg>
+            </div>
+            <h3 class="feature-title">Category Breakdown</h3>
+            <p class="feature-description">
+                See where your money goes with detailed category analysis
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper orange">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h3 class="feature-title">Monthly Reports</h3>
+            <p class="feature-description">
+                Get comprehensive monthly summaries and comparisons
+            </p>
+        </div>
+    </div>
+
+    <div class="analytics-cta">
+        <p class="analytics-cta-text">Want to be notified when analytics launches?</p>
+        <button class="analytics-cta-button" onclick="notifyMe()">Notify Me</button>
+    </div>
+</div>
+
+<script>
+    function notifyMe() {
+        alert('Thank you! We\'ll notify you when analytics is ready.');
+    }
+</script>
+{% endblock %}
