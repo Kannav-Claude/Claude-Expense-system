@@ -108,6 +108,90 @@ def analytics():
     return render_template("analytics.html")
 
 
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+    try:
+        user = db.execute(
+            "SELECT id, name, email, created_at FROM users WHERE id = ?",
+            (session["user_id"],)
+        ).fetchone()
+
+        if not user:
+            session.clear()
+            return redirect(url_for("login"))
+
+        stats = db.execute(
+            """SELECT COUNT(*) AS expense_count,
+                      COALESCE(SUM(amount), 0) AS total_spent,
+                      COALESCE(AVG(amount), 0) AS avg_expense
+               FROM expenses WHERE user_id = ?""",
+            (session["user_id"],)
+        ).fetchone()
+
+        category_rows = db.execute(
+            """SELECT category,
+                      COALESCE(SUM(amount), 0) AS cat_total,
+                      COUNT(*) AS cat_count
+               FROM expenses WHERE user_id = ?
+               GROUP BY category ORDER BY cat_total DESC""",
+            (session["user_id"],)
+        ).fetchall()
+    finally:
+        db.close()
+
+    if request.method == "POST":
+        new_name = request.form.get("name", "").strip()
+        new_password = request.form.get("new_password", "")
+        confirm_pw = request.form.get("confirm_password", "")
+
+        errors = []
+        if not new_name:
+            errors.append("Name cannot be empty.")
+
+        changing_password = bool(new_password or confirm_pw)
+        if changing_password:
+            if len(new_password) < 8:
+                errors.append("New password must be at least 8 characters.")
+            if new_password != confirm_pw:
+                errors.append("Passwords do not match.")
+
+        if errors:
+            for e in errors:
+                flash(e, "error")
+            return render_template("profile.html", user=user,
+                                   stats=stats, category_rows=category_rows)
+
+        db = get_db()
+        try:
+            if changing_password:
+                db.execute(
+                    "UPDATE users SET name = ?, password = ? WHERE id = ?",
+                    (new_name, generate_password_hash(new_password), session["user_id"])
+                )
+            else:
+                db.execute(
+                    "UPDATE users SET name = ? WHERE id = ?",
+                    (new_name, session["user_id"])
+                )
+            db.commit()
+            session["user_name"] = new_name
+            flash("Profile updated.", "success")
+        except sqlite3.Error:
+            db.rollback()
+            flash("Failed to update profile.", "error")
+        finally:
+            db.close()
+
+        return redirect(url_for("profile"))
+
+    return render_template("profile.html", user=user,
+                           stats=stats, category_rows=category_rows)
+
+
 @app.route("/expenses")
 def expenses():
     if "user_id" not in session:

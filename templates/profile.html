@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <div class="page-header">
+        <div>
+            <h1>Your Profile</h1>
+            <p class="subtitle">Manage your account and view your spending summary</p>
+        </div>
+    </div>
+
+    <div class="profile-layout">
+
+        <!-- LEFT: account info + spending stats -->
+        <div class="profile-left">
+
+            <!-- Account info card -->
+            <div class="profile-card">
+                <div class="profile-card-header">Account</div>
+                <div class="profile-info-row">
+                    <span class="profile-label">Name</span>
+                    <span class="profile-value">{{ user['name'] }}</span>
+                </div>
+                <div class="profile-info-row">
+                    <span class="profile-label">Email</span>
+                    <span class="profile-value">{{ user['email'] }}</span>
+                </div>
+                <div class="profile-info-row">
+                    <span class="profile-label">Member since</span>
+                    <span class="profile-value">{{ user['created_at'][:10] }}</span>
+                </div>
+            </div>
+
+            <!-- Spending summary stats card -->
+            <div class="profile-card">
+                <div class="profile-card-header">Spending Summary</div>
+                <div class="profile-stats-grid">
+                    <div class="profile-stat">
+                        <span class="profile-stat-value">
+                            ₹{{ "%.2f"|format(stats['total_spent']) }}
+                        </span>
+                        <span class="profile-stat-label">Total Spent</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-value">{{ stats['expense_count'] }}</span>
+                        <span class="profile-stat-label">Expenses Logged</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="profile-stat-value">
+                            ₹{{ "%.2f"|format(stats['avg_expense']) }}
+                        </span>
+                        <span class="profile-stat-label">Avg per Expense</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category breakdown card (bar chart) -->
+            {% if category_rows %}
+            <div class="profile-card">
+                <div class="profile-card-header">By Category</div>
+                <div class="profile-bars">
+                    {% for row in category_rows %}
+                    {% set pct = (row['cat_total'] / stats['total_spent'] * 100)|round(1) if stats['total_spent'] > 0 else 0 %}
+                    <div class="profile-bar-row">
+                        <div class="profile-bar-meta">
+                            <span class="profile-bar-cat">{{ row['category'] }}</span>
+                            <span class="profile-bar-amt">
+                                ₹{{ "%.2f"|format(row['cat_total']) }}
+                                ({{ row['cat_count'] }} expense{{ 's' if row['cat_count'] != 1 }})
+                            </span>
+                        </div>
+                        <div class="profile-bar-track">
+                            <div class="profile-bar-fill"
+                                 style="width: {{ pct }}%"
+                                 title="{{ pct }}%">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="profile-card profile-empty">
+                <p>No expenses yet. <a href="{{ url_for('add_expense') }}">Add your first expense.</a></p>
+            </div>
+            {% endif %}
+
+        </div><!-- /profile-left -->
+
+        <!-- RIGHT: edit form -->
+        <div class="profile-right">
+            <div class="profile-card">
+                <div class="profile-card-header">Edit Profile</div>
+
+                <form method="POST" action="{{ url_for('profile') }}">
+
+                    <div class="form-group">
+                        <label for="name">Full name</label>
+                        <input type="text" id="name" name="name"
+                               class="form-input"
+                               value="{{ request.form.get('name', user['name']) }}"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email"
+                               class="form-input profile-input-readonly"
+                               value="{{ user['email'] }}"
+                               disabled>
+                        <span class="form-hint">Email cannot be changed.</span>
+                    </div>
+
+                    <div class="profile-section-divider">Change Password
+                        <span class="profile-optional">(optional)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_password">New password</label>
+                        <input type="password" id="new_password" name="new_password"
+                               class="form-input" placeholder="Min. 8 characters"
+                               minlength="8" autocomplete="new-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm new password</label>
+                        <input type="password" id="confirm_password" name="confirm_password"
+                               class="form-input" placeholder="Repeat new password"
+                               autocomplete="new-password">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Save changes</button>
+
+                </form>
+            </div>
+        </div><!-- /profile-right -->
+
+    </div><!-- /profile-layout -->
+
+</div><!-- /profile-page -->
+{% endblock %}
