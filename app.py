@@ -72,7 +72,7 @@ def login():
         if user and check_password_hash(user["password"], password):
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
-            return redirect(url_for("expenses"))
+            return redirect(url_for("profile"))
 
         flash("Invalid email or password.", "error")
         return render_template("login.html")

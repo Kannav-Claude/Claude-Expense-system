@@ -27,14 +27,14 @@ def test_login_get(client):
 
 
 def test_login_valid_credentials(client, auth_user):
-    """Test valid login creates session and redirects to expenses."""
+    """Test valid login creates session and redirects to profile."""
     response = client.post('/login', data={
         'email': 'john@example.com',
         'password': 'password123'
     }, follow_redirects=False)
 
     assert response.status_code == 302
-    assert response.location.endswith('/expenses')
+    assert response.location.endswith('/profile')
 
     # Verify session was created
     with client.session_transaction() as sess:
@@ -83,7 +83,7 @@ def test_login_case_insensitive_email(client, auth_user):
     }, follow_redirects=False)
 
     assert response.status_code == 302
-    assert response.location.endswith('/expenses')
+    assert response.location.endswith('/profile')
 
     # Verify session was created
     with client.session_transaction() as sess:
