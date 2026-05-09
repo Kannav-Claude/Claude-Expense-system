@@ -18,3 +18,19 @@ document.addEventListener('keydown', function(event) {
         closeVideoModal();
     }
 });
+
+// Date filter validation
+function initDateFilter() {
+    var form = document.getElementById('filterForm');
+    if (!form) { return; }
+    form.addEventListener('submit', function(e) {
+        var start = document.getElementById('start_date').value;
+        var end = document.getElementById('end_date').value;
+        if (start && end && start > end) {
+            e.preventDefault();
+            alert('Start date must be on or before the end date.');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', initDateFilter);

@@ -2,8 +2,9 @@ import os
 import sqlite3
 import tempfile
 import pytest
+from werkzeug.security import generate_password_hash
 from app import app as flask_app
-from database.db import init_db, DATABASE
+from database.db import init_db, DATABASE, get_db
 
 
 @pytest.fixture
@@ -40,3 +41,26 @@ def client(app):
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def registered_user(app):
+    """Insert a user but do NOT log in."""
+    with app.app_context():
+        db = get_db()
+        db.execute(
+            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+            ('Jane Doe', 'jane@example.com', generate_password_hash('password123'))
+        )
+        db.commit()
+        db.close()
+
+
+@pytest.fixture
+def logged_in_client(client, registered_user):
+    """Client with an active session."""
+    client.post('/login', data={
+        'email': 'jane@example.com',
+        'password': 'password123'
+    })
+    return client

@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db, VALID_CATEGORIES
@@ -113,6 +113,36 @@ def profile():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
+    start_date = request.args.get('start_date', '').strip() or None
+    end_date = request.args.get('end_date', '').strip() or None
+
+    if start_date and len(start_date) > 10:
+        flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+        return redirect(url_for("profile"))
+    if end_date and len(end_date) > 10:
+        flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+        return redirect(url_for("profile"))
+
+    if start_date:
+        try:
+            datetime.strptime(start_date, '%Y-%m-%d')
+        except ValueError:
+            flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+            return redirect(url_for("profile"))
+
+    if end_date:
+        try:
+            datetime.strptime(end_date, '%Y-%m-%d')
+        except ValueError:
+            flash("Invalid date format. Please use YYYY-MM-DD.", "error")
+            return redirect(url_for("profile"))
+
+    filter_applied = bool(start_date or end_date)
+
+    if start_date and end_date and start_date > end_date:
+        flash("Start date must be before end date.", "error")
+        return redirect(url_for("profile"))
+
     db = get_db()
     try:
         user = db.execute(
@@ -124,20 +154,30 @@ def profile():
             session.clear()
             return redirect(url_for("login"))
 
-        stats = db.execute(
-            """SELECT COUNT(*) AS expense_count,
-                      COALESCE(SUM(amount), 0) AS total_spent,
-                      COALESCE(AVG(amount), 0) AS avg_expense
-               FROM expenses WHERE user_id = ?""",
-            (session["user_id"],)
-        ).fetchone()
+        stats_query = """SELECT COUNT(*) AS expense_count,
+                                COALESCE(SUM(amount), 0) AS total_spent,
+                                COALESCE(AVG(amount), 0) AS avg_expense
+                           FROM expenses WHERE user_id = ?"""
+        stats_params = [session["user_id"]]
+        if start_date:
+            stats_query += " AND date >= ?"
+            stats_params.append(start_date)
+        if end_date:
+            stats_query += " AND date <= ?"
+            stats_params.append(end_date)
+        stats = db.execute(stats_query, stats_params).fetchone()
 
-        expense_list = db.execute(
-            """SELECT id, date, category, amount, description
-               FROM expenses WHERE user_id = ?
-               ORDER BY date ASC""",
-            (session["user_id"],)
-        ).fetchall()
+        expense_query = """SELECT id, date, category, amount, description
+                             FROM expenses WHERE user_id = ?"""
+        expense_params = [session["user_id"]]
+        if start_date:
+            expense_query += " AND date >= ?"
+            expense_params.append(start_date)
+        if end_date:
+            expense_query += " AND date <= ?"
+            expense_params.append(end_date)
+        expense_query += " ORDER BY date ASC"
+        expense_list = db.execute(expense_query, expense_params).fetchall()
     finally:
         db.close()
 
@@ -161,7 +201,8 @@ def profile():
             for e in errors:
                 flash(e, "error")
             return render_template("profile.html", user=user,
-                                   stats=stats, expense_list=expense_list)
+                                   stats=stats, expense_list=expense_list,
+                                   start_date=start_date, end_date=end_date, filter_applied=filter_applied)
 
         db = get_db()
         try:
@@ -187,7 +228,8 @@ def profile():
         return redirect(url_for("profile"))
 
     return render_template("profile.html", user=user,
-                           stats=stats, expense_list=expense_list)
+                           stats=stats, expense_list=expense_list,
+                           start_date=start_date, end_date=end_date, filter_applied=filter_applied)
 
 
 @app.route("/expenses")
