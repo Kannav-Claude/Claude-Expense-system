@@ -935,6 +935,70 @@ a.btn-primary {
     margin-top: 0.2rem;
 }
 
+.expenses-table-wrapper {
+    overflow-x: auto;
+}
+
+.expenses-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.expenses-table thead {
+    background: var(--paper-warm);
+    border-bottom: 2px solid var(--border);
+}
+
+.expenses-table th {
+    padding: 0.8rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.expenses-table tbody tr {
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.2s ease;
+}
+
+.expenses-table tbody tr:hover {
+    background: var(--paper-warm);
+}
+
+.expenses-table td {
+    padding: 0.9rem 0.8rem;
+    color: var(--ink);
+}
+
+.expense-date {
+    font-weight: 500;
+    color: var(--ink-soft);
+    min-width: 100px;
+}
+
+.expense-category {
+    font-weight: 500;
+    color: var(--accent);
+    min-width: 120px;
+}
+
+.expense-description {
+    color: var(--ink-muted);
+    max-width: 250px;
+    word-break: break-word;
+}
+
+.expense-amount {
+    text-align: right;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 100px;
+}
+
 @media (max-width: 900px) {
     .profile-layout {
         grid-template-columns: 1fr;

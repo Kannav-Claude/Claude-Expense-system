@@ -132,12 +132,10 @@ def profile():
             (session["user_id"],)
         ).fetchone()
 
-        category_rows = db.execute(
-            """SELECT category,
-                      COALESCE(SUM(amount), 0) AS cat_total,
-                      COUNT(*) AS cat_count
+        expense_list = db.execute(
+            """SELECT id, date, category, amount, description
                FROM expenses WHERE user_id = ?
-               GROUP BY category ORDER BY cat_total DESC""",
+               ORDER BY date ASC""",
             (session["user_id"],)
         ).fetchall()
     finally:
@@ -163,7 +161,7 @@ def profile():
             for e in errors:
                 flash(e, "error")
             return render_template("profile.html", user=user,
-                                   stats=stats, category_rows=category_rows)
+                                   stats=stats, expense_list=expense_list)
 
         db = get_db()
         try:
@@ -189,7 +187,7 @@ def profile():
         return redirect(url_for("profile"))
 
     return render_template("profile.html", user=user,
-                           stats=stats, category_rows=category_rows)
+                           stats=stats, expense_list=expense_list)
 
 
 @app.route("/expenses")

@@ -57,29 +57,31 @@
                 </div>
             </div>
 
-            <!-- Category breakdown card (bar chart) -->
-            {% if category_rows %}
+            <!-- Expenses list by date -->
+            {% if expense_list %}
             <div class="profile-card">
-                <div class="profile-card-header">By Category</div>
-                <div class="profile-bars">
-                    {% for row in category_rows %}
-                    {% set pct = (row['cat_total'] / stats['total_spent'] * 100)|round(1) if stats['total_spent'] > 0 else 0 %}
-                    <div class="profile-bar-row">
-                        <div class="profile-bar-meta">
-                            <span class="profile-bar-cat">{{ row['category'] }}</span>
-                            <span class="profile-bar-amt">
-                                ₹{{ "%.2f"|format(row['cat_total']) }}
-                                ({{ row['cat_count'] }} expense{{ 's' if row['cat_count'] != 1 }})
-                            </span>
-                        </div>
-                        <div class="profile-bar-track">
-                            <div class="profile-bar-fill"
-                                 style="width: {{ pct }}%"
-                                 title="{{ pct }}%">
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+                <div class="profile-card-header">Expenses by Date</div>
+                <div class="expenses-table-wrapper">
+                    <table class="expenses-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expense_list %}
+                            <tr>
+                                <td class="expense-date">{{ expense['date'] }}</td>
+                                <td class="expense-category">{{ expense['category'] }}</td>
+                                <td class="expense-description">{{ expense['description'] or '—' }}</td>
+                                <td class="expense-amount">₹{{ "%.2f"|format(expense['amount']) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             {% else %}
